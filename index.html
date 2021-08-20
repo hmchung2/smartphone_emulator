@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>VanillaJS Single Page App</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <script type="module" src="./index.js"></script>
+    <script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        ev.target.appendChild(document.getElementById(data));
+    }
+    </script>
+
+    <style>
+      #page_root{
+        background-color: #1E90FF;
+      }
+      .sp{
+        width: 500px;
+        margin: auto;
+      }
+      main .sp{
+        height: 700px;
+      }
+      #div1 {
+          width: 250px;
+          height: 250px;
+          padding: 10px;
+          margin: 0px 10px 0px 0px;
+          border: 1px solid #aaaaaa;
+          float: left;
+      }
+      .appbox{
+          border-radius: 10px;
+          width:70px;
+          height:70px;
+          float:left;
+          margin:5px;
+      }
+      .app{
+        border-radius: 10px;
+        width:70px;
+        height:70px;
+        float:left;
+        margin:5px;
+        background-color:white;
+      }
+      #div2 {
+          width: 250px;
+          height: 250px;
+          padding: 10px;
+          border: 1px solid #aaaaaa;
+          float: left;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <!-- Header root (always visible) -->
+    <header class="sp" id="header_root"></header>
+    <!-- Page root (content rendered based on URL) -->
+
+    <main>
+      <div class="sp" id='page_root'></div>
+    </main>
+    <!-- Footer root (always visible) -->
+    <footer class="sp" id="footer_root"></footer>
+  </body>
+</html>
