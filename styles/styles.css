@@ -1,0 +1,25 @@
+#page_root{
+  background-color: #1E90FF;
+}
+.sp{
+  width: 480px;
+  margin: auto;
+}
+main .sp{
+  height: 720px;
+}
+.appbox{
+    border-radius: 10px;
+    width:70px;
+    height:70px;
+    float:left;
+    margin:5px;
+}
+.app{
+  border-radius: 10px;
+  width:70px;
+  height:70px;
+  float:left;
+  margin:5px;
+  background-color:white;
+}

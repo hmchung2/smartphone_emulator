@@ -1,32 +1,40 @@
+import AppInfo from '../AppConfig.js';
+
 const Navbar = {
-  /**
-   * Render the component content.
-   */
+
   render: async () => {
-    return /*html*/ `
-      <p class="text-center"><em id="time"></em></p>
-    `;
+    const currentLoc = location.href.split("/").pop();
+
+    const apps = Object.keys(AppInfo)
+    const lapps = apps.map(app => app.toLowerCase())
+    if(lapps.includes(currentLoc)){
+      console.log("ok")
+      return /*html*/ `
+        <p class="text-center">
+        <button style="float:left;" onclick="location.href='/'">back</button>
+        <em id="time"></em>
+        <button style="float:right;" id="newbtn">new</button>
+        </p>
+      `;
+    }else{
+      return /*html*/ `
+        <p class="text-center"><em id="time"></em></p>
+      `;
+    }
   },
-  /**
-   * All the code related to DOM interactions and controls go in here.
-   * This is a separate call as these can be registered only after the DOM has been painted.
-   */
+
   after_render: async () => {
-    // Select a node that will contain the clock and date.
     const time = document.querySelector('#time');
-    /**
-     * Set inner html of selected node to current time and update it every second.
-     */
     const updateTime = () => {
-      // Get current time and format a clock and date.
       const newDate = new Date();
-      const clock = newDate.toTimeString().slice(0, 8);
-      const date = newDate.toLocaleDateString().slice(0, 8);
-      // Insert formatted clock and date into footer inner html.
-      time.innerHTML = `${clock} ${date}`;
+      var hh = newDate.getHours();
+      var min = newDate.getMinutes();
+      var ss = newDate.getSeconds();
+      var mm = newDate.getMonth() + 1;
+      var yy = newDate.getFullYear();
+      time.innerHTML = `${yy}년 ${mm}월 ${hh}시 ${min}분 ${ss}초`;
     };
 
-    // Set node content and update it every second.
     updateTime();
     setInterval(updateTime, 1000);
 
