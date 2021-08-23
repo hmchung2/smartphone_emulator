@@ -15,7 +15,7 @@ const About = {
     let minutes = `<select id='minutes'>`;
     for(let i = 0 ; i < 6 ; i++){
       if(i == 0){
-          minutes = minutes + `<option value="${i*10} selected">${i*10}분</selected>`
+          minutes = minutes + `<option value="${i*10}" selected">${i*10}분</selected>`
       }else{
           minutes = minutes + `<option value="${i*10}">${i*10}분</selected>`
       }
@@ -32,6 +32,12 @@ const About = {
           <button id="saveAlarm" style="float:right;">저장</buttom>
         </div>
     `;
+    let seqAlarm = localStorage.getItem("alarmData_seq");
+    if(seqAlarm == null){
+      localStorage.setItem("alarmData_seq", "0");
+    }
+
+
     let data = localStorage.getItem("alarmData");
     var alarmList = null;
     if(data == null){
@@ -47,11 +53,11 @@ const About = {
         const alarmId = Object.keys(data)
         //const alarmValues = Object.values(data)
 
-        alarmList = `<table id="alarm-list">
-            <tbody>
+        alarmList = `<table>
+            <tbody id="alarm-list">
         `;
         for(let id in alarmId){
-          var alarmValue = data[id];
+          var alarmValue = data[alarmId[id]];
           var alarmHour = parseInt(alarmValue.split("-")[0]);
           var alarmMD = "오전";
           var alarmMin = parseInt(alarmValue.split("-")[1]);
@@ -60,10 +66,10 @@ const About = {
             alarmHour  = alarmHour - 12;
           }
           alarmList = alarmList +   `
-            <tr style="width:480px;">
+            <tr>
               <td class="alarmtime">
               ${alarmMD} ${alarmHour}시 ${alarmMin}분
-                <button class="deleteBtn">삭제</button>
+                <button id="id_${alarmId[id]}" class="deleteBtn">삭제</button>
               </td>
             </tr>
             `
@@ -80,11 +86,16 @@ const About = {
     `;
 
   },
-  /**
-   * All the code related to DOM interactions and controls go in here.
-   * This is a separate call as these can be registered only after the DOM has been painted.
-   */
+
+
   after_render: async () => {
+
+    const getSeqNextVal = function(){
+      let seqVal = parseInt(localStorage.getItem("alarmData_seq")) + 1;
+      localStorage.setItem("alarmData_seq",  seqVal.toString() )
+      return seqVal.toString();
+    }
+
     const saveBtn = document.querySelector("#saveAlarm");
     var morningDay = document.querySelector("#morningday");
     var hour = document.querySelector("#hours");
@@ -92,14 +103,11 @@ const About = {
 
     const setAlarmData= function(v){
       let data = localStorage.getItem("alarmData")
-      let new_index = 0;
+      let new_index = getSeqNextVal();
       if(data == null){
-        data = {0 : v }
+        data = {new_index : v }
       }else{
         data = JSON.parse(data);
-        let last_index = parseInt(Object.keys(data).pop() ) ;
-        new_index = last_index + 1;
-
         data[new_index] = v;
       }
       data = JSON.stringify(data)
@@ -107,15 +115,54 @@ const About = {
       return new_index;
     }
 
+    const deleteAlarm = function(id){
+      let deleteElement = document.querySelector("#"+id)
+      let data = localStorage.getItem("alarmData")
+      if(data != null){
+        data = JSON.parse(data)
+        if(Object.keys(data).includes(id.split("_")[1])){
+            delete data[id.split("_")[1]]
+        }
+        data = JSON.stringify(data)
+        localStorage.setItem("alarmData" ,data)
+      }
+      //document.querySelector("#alarmList"),
+      console.log(deleteElement.parentNode.parentNode)
+      var row = deleteElement.parentNode.parentNode;
+      document.querySelector("#alarm-list").removeChild(row);
+    }
+
+    let deleteTags = document.querySelectorAll(".deleteBtn");
+    deleteTags.forEach((item, i) => {
+      item.onclick = function(){
+
+        console.log("delete : "+  item.id)
+        deleteAlarm(item.id)
+      }
+    });
     saveBtn.onclick = function(){
       let miliHour = parseInt(hour.value);
       let savingMin = parseInt(min.value);
+      let morningDayOutput = "오후";
       if(morningDay.value == "day"){
         miliHour = miliHour + 12;
+        morningDayOutput = "오전";
       }
-      let index = setAlarmData(miliHour+"-"+ savingMin)
-
-      console.log(index)
+      let new_index = setAlarmData(miliHour+"-"+ savingMin)
+      var newtr = document.createElement("tr")
+      var newtd = document.createElement("td")
+      var newBtn = document.createElement("button")
+      newtd.className = "alarmtime";
+      newtd.innerHTML = morningDayOutput + " " + hour.value + "시 " + min.value + "분"
+      newBtn.className = "deleteBtn";
+      newBtn.id = "id_" + new_index;
+      newBtn.innerHTML = "삭제";
+      newBtn.onclick = function(){
+        deleteAlarm(this.id);
+      }
+      newtd.appendChild(newBtn)
+      newtr.appendChild(newtd)
+      document.querySelector("#alarm-list").appendChild(newtr);
     }
   }
 };

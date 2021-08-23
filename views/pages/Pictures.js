@@ -1,65 +1,110 @@
-/**
- * Fetch data from external API.
- * @return {Array} Data fetched.
- */
-const getItems = async () => {
-  try {
-    // Set API url.
-    const apiUrl = `https://www.breakingbadapi.com/api/characters`;
-    // Create options for the fetch function.
-    const options = { cache: 'force-cache' };
-    // Get a response from the API.
-    const response = await fetch(apiUrl, options);
-    // Parse response into JSON.
-    const data = await response.json();
-    // Print fetched data to the console.
-    console.log('(App) Data fetched from API:', data);
-    // Return fetched data.
-    return data;
-  } catch (error) {
-    // Print catched error to the console.
-    console.log('(App) Error occured while getting data.', error);
-  }
-};
+const Pictures = {
 
-const Items = {
-  /**
-   * Render the page content.
-   */
   render: async () => {
-    // Get items data.
-    const items = await getItems();
-    // Map over items and build card components.
-    const itemList = items
-      .map(
-        ({ name, img, char_id }) => /*html*/ `
-        <div class="col-lg-3 col-md-4 col-sm-6">
-          <div class="card mb-3" style="width: 13rem;">
-            <a href="/#/items/${char_id}">
-              <img src=${img} class="card-img-top" alt=${name}>
-            </a>
-            <div class="card-body">
-              <h5 class="card-title">${name}</h5>
-            </div>
+
+    return `
+    <div class="grid-container">
+      <main class="grid-item main">
+        <div class="items">
+          <div class="item item1">
+            <img src="./images/1.jpg">
+          </div>
+          <div class="item item2">
+          <img src="./images/2.jpg" >
+          </div>
+          <div class="item item3">
+          <img  src="./images/3.jpg" >
+          </div>
+          <div class="item item4">
+          <img  src="./images/4.jpg" >
+          </div>
+          <div class="item item5">
+            <img src="./images/5.jpg" >
+          </div>
+          <div class="item item6">
+          <img src="./images/6.jpg" >
+          </div>
+          <div class="item item7">
+          <img src="./images/7.jpg" >
+          </div>
+          <div class="item item8">
+          <img src="./images/8.jpg" >
+          </div>
+          <div class="item item9">
+          <img src="./images/9.jpg" >
+          </div>
+          <div class="item item10">
+          <img src="./images/10.jpg" >
           </div>
         </div>
-      `
-      )
-      .join('\n');
-    return /*html*/ `
-      <section class="container-md">
-        <h1 class="text-center">List of characters:</h1>
-        <div class="row m-4">
-          ${itemList}
-        </div>
-      </section>  
-    `;
-  },
-  /**
-   * All the code related to DOM interactions and controls go in here.
-   * This is a separate call as these can be registered only after the DOM has been painted.
-   */
-  after_render: async () => {}
-};
+      </main>
+      <footer class="grid-item footer">
 
-export default Items;
+      </footer>
+    </div>
+
+    <div id="picture-spot">
+      <img id="full-image" src="#" />
+    </div>
+    `;
+
+  },
+
+  after_render: async () => {
+    const newbtn = document.querySelector("#newbtn");
+    newbtn.style.display = 'none';
+    const slider = document.querySelector('.items');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+      console.log(walk);
+    });
+
+
+    const images = document.querySelectorAll('img');
+
+    const chooseImg = function(node){
+      document.querySelectorAll('img').forEach((item2, i) => {
+        item2.classList.remove("chosen");
+      });
+      node.className = "chosen";
+      var imgNode = document.querySelector("#full-image");
+      console.log(node.src)
+      imgNode.src = node.src;
+    }
+
+    chooseImg(images[0])
+
+
+    images.forEach((item, i) => {
+      item.onclick = function(){
+        chooseImg(item)
+      };
+    });
+
+
+
+  }
+};
+export default Pictures;

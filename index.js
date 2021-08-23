@@ -4,7 +4,6 @@ import Home from './views/pages/Home.js';
 import Alarm from './views/pages/Alarm.js';
 import Memo from './views/pages/memo.js';
 import Pictures from './views/pages/Pictures.js';
-import ItemShow from './views/pages/ItemShow.js';
 import Error404 from './views/pages/Error404.js';
 
 import Navbar from './views/components/Navbar.js';
