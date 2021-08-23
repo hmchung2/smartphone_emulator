@@ -32,13 +32,52 @@ const About = {
           <button id="saveAlarm" style="float:right;">저장</buttom>
         </div>
     `;
+    let data = localStorage.getItem("alarmData");
+    var alarmList = null;
+    if(data == null){
+      alarmList =  `<table id= "alarm-list">
+                      <tbody>
+                      <tr>
+                      </tr>
+                      <tbody>
+                    </table>
+                    `;
+    }else{
+        data = JSON.parse(data);
+        const alarmId = Object.keys(data)
+        //const alarmValues = Object.values(data)
+
+        alarmList = `<table id="alarm-list">
+            <tbody>
+        `;
+        for(let id in alarmId){
+          var alarmValue = data[id];
+          var alarmHour = parseInt(alarmValue.split("-")[0]);
+          var alarmMD = "오전";
+          var alarmMin = parseInt(alarmValue.split("-")[1]);
+          if(alarmHour > 12 ){
+            alarmMD = "오후"
+            alarmHour  = alarmHour - 12;
+          }
+          alarmList = alarmList +   `
+            <tr style="width:480px;">
+              <td class="alarmtime">
+              ${alarmMD} ${alarmHour}시 ${alarmMin}분
+                <button class="deleteBtn">삭제</button>
+              </td>
+            </tr>
+            `
+        }
+        alarmList = alarmList + `</tbody></table>`
+
+    }
     return /*html*/ `
       <section>
         ${saving}
+        <hr style="border-top: 2px solid #8c8b8b;">
+        ${alarmList}
       </section>
     `;
-
-
 
   },
   /**
@@ -60,6 +99,7 @@ const About = {
         data = JSON.parse(data);
         let last_index = parseInt(Object.keys(data).pop() ) ;
         new_index = last_index + 1;
+
         data[new_index] = v;
       }
       data = JSON.stringify(data)
@@ -73,7 +113,8 @@ const About = {
       if(morningDay.value == "day"){
         miliHour = miliHour + 12;
       }
-      let index = setAlarmData(miliHour+"-"+ savingMin )
+      let index = setAlarmData(miliHour+"-"+ savingMin)
+
       console.log(index)
     }
   }

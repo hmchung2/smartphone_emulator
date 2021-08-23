@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "npx live-server --verbose"
+    "dev": "npx live-server --verbose --port=8000"
   },
   "author": "Mateusz Pyzowski",
   "license": "ISC"

@@ -15,15 +15,19 @@ const About = {
       var memoList= null;
       if(data == null){
         memoList = `<table id= "memo-list">
+                        <tbody>
                         <tr>
                         </tr>
+                        <tbody>
                       </table>
-                      `;
+                      `;                      
+
       }else{
         data = JSON.parse(data);
         const memoId = Object.keys(data)
         const memoValues = Object.values(data)
         memoList =`<table id="memo-list">
+            <tbody>
             <tr hidden>
               <td class="limit-line">샘플 메시지 샘플 </td>
             </tr>
@@ -38,7 +42,7 @@ const About = {
                 </td>
               </tr>
               `
-          ).join('\n') + `</table>`;
+          ).join('\n') + `</tbody></table>`;
       }
     return `<section>
       ${memoModal}
@@ -108,12 +112,22 @@ const About = {
           disableLimit(item.id)
       }
     });
+    const insertAt = (str, sub, pos) => `${str.slice(0, pos)}${sub}${str.slice(pos)}`;
 
+    const checkSpace = function(text){
+      var textlen = text.length
+      var cnt = 1;
+      while(cnt * 64 < text.length ){
+        text = insertAt(text ,  "\n" , (cnt * 64) + (cnt * 2) )
+        cnt++
+      }
+      return text
+    }
 
     memo_box.onkeyup = function(e){
       var key = 'which' in e ? e.which : e.keyCode;
       if (key == 13) {
-        let new_index = setMemoData(memo_box.value);
+        let new_index = setMemoData(checkSpace(memo_box.value));
         var newtr = document.createElement("tr");
         var newtd = document.createElement("td");
         newtd.className = 'limit-line';
@@ -121,7 +135,7 @@ const About = {
         newtd.onclick = function(){
             disableLimit(newtd.id)
         };
-        newtd.innerHTML = memo_box.value;
+        newtd.innerHTML = checkSpace(memo_box.value);
         newtr.appendChild(newtd)
         memo_box.value = ""
         span.click();
