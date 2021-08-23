@@ -20,3 +20,9 @@ npm run dev 만 입력하면 서버가 자동으로 실행 됩니다.
 ***
 만약 npm 명령어가 없으면 https://nodejs.org/en/download/ 에서 사용하는 OS에 맞는 버전으로 node.js 다운로드가 필요합니다.
 ***
+
+
+[포트폴리오](https://hmchung2.github.io/portfolio/)
+[깃허브](https://github.com/hmchung2) 
+[깃랩](https://gitlab.com/hmchung1005)
+[유튜브](https://www.youtube.com/channel/UC71kfEJOuSI7aK0CmdXn-0Q)
