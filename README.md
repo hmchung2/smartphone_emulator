@@ -3,9 +3,9 @@
 
 ## 서버 실행 방법
 
-1. git clone
+1. command 창 열기
 
-2. command 창 열기
+2. git clone 프로젝트
 
 3. 프로젝트 경로로 이동
 
